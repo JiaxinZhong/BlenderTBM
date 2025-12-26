@@ -51,8 +51,10 @@ def get_rules_and_legend(materials):
     return rules, legend
 
 legend_settings = {
-    'start_pos': Vector((2.5, -5, 0)),
-    'cols': 2, 'row_spacing': 2.0, 'col_spacing': 8.5, 'line_length': 3.0
+    'start_pos': Vector((1.5, -5, 0)),
+    'cols': 2, 
+    'row_spacing': 2.0, 
+    'col_spacing': 9.5, 'line_length': 3.0
 }
 output_res = (2000, 900)
 output_name = "1D_Range3"

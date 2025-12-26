@@ -40,8 +40,8 @@ def run():
     
     # The configuration name to load (corresponds to the filename in 'configs/')
     # DO NOT add .py extension here.
-    TARGET_CONFIG = "config_1D_Range2" 
-    # TARGET_CONFIG = "config_1D_Range3" 
+    # TARGET_CONFIG = "config_1D_Range2" 
+    TARGET_CONFIG = "config_1D_Range3" 
     # TARGET_CONFIG = "config_2D_Reciprocal" 
     # TARGET_CONFIG = "config_3D_Reciprocal" 
     

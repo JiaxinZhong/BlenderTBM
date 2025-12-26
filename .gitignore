@@ -1,3 +1,16 @@
+# Temporary files
+*.tmp.py
+
+# Ignore figures 
+*.png 
+*.jpg
+*.jpeg
+*.gif
+
+# Ignore Blender backup files
+*.blend1
+*.blend2
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

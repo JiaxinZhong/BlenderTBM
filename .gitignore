@@ -1,4 +1,3 @@
-
 # Temporary files
 *.tmp.py
 
@@ -10,6 +9,9 @@
 
 # White list assets directory
 !assets/
+!assets/*.png
+!assets/*.jpg
+!assets/*.gif
 
 # Ignore Blender backup files
 *.blend1

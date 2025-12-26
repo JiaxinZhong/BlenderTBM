@@ -3,7 +3,7 @@
 **Publication-quality 3D visualization for Tight-Binding Models using Blender.**
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Blender](https://img.shields.io/badge/Blender-3.0%2B-orange)
+![Blender](https://img.shields.io/badge/Blender-5.0%2B-orange)
 ![Python](https://img.shields.io/badge/Python-3.x-yellow)
 
 **BlenderTBM** is a lightweight Python framework designed for condensed matter physicists. 
@@ -16,7 +16,10 @@ Instead of manually dragging objects in 3D software or settling for flat 2D plot
 ### Prerequisites
 
 1.  **Blender** (Version 5.0 or later recommended).
-2.  (Needed if you want to generate LaTeX formula meshes) **[latex2blender](https://github.com/ghassaei/latex2blender)** addon.
+Tested with version 5.0.
+2.  **[latex2blender](https://github.com/ghseeli/latex2blender)** addon.
+Needed if you want to generate LaTeX formula meshes.
+Tested with version 1.0.7.
 
 ### Installation & Run
 
@@ -24,7 +27,7 @@ This project is designed to be edited in an **external editor** (like VS Code) a
 
 1.  **Clone the repository**:
     ```bash
-    git clone [https://github.com/JiaxinZhong/BlenderTBM.git](https://github.com/JiaxinZhong/BlenderTBM.git)
+    git clone https://github.com/JiaxinZhong/BlenderTBM.git
     ```
 
 2.  **Open Blender**:
@@ -38,7 +41,6 @@ This project is designed to be edited in an **external editor** (like VS Code) a
     * Open `main.py` in your code editor.
     * Change the `TARGET_CONFIG` variable to match a file in the `configs/` folder (e.g., `config_2D_Reciprocal.py`):
         ```python
-        # main.py
         TARGET_CONFIG = "config_2D_Reciprocal"  # Change this to your desired config
         ```
 

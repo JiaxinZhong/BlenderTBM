@@ -1,14 +1,9 @@
 from mathutils import Vector
 from core.materials import HoppingStyle
+import core.colors as colors
 
 color_site = (0.3, 0.3, 0.3, 1)
-hop_colors = [
-    (230/255, 75/255, 53/255, 1),             # 1. 朱红 (Red) - 强调色
-    (77/255, 187/255, 213/255, 1),            # 2. 湖蓝 (Blue) - 强调色
-    (0/255, 160/255, 135/255, 1),             # 3. 翠绿 (Green) - 常用对比
-    (60/255, 84/255, 136/255, 1),             # 4. 深蓝 (Dark Blue)
-    (243/255, 155/255, 127/255, 1),           # 5. 浅鲑红 (Light Red)
-]
+hop_colors = [colors.NPG[i] for i in range(5)]
 
 Nx, Ny, Nz = 3, 3, 3  # Number of sites in x, y, z directions
 dx, dy, dz = 5.0, 5.0, 5.0
@@ -27,12 +22,8 @@ def get_rules_and_legend(materials):
         HoppingStyle(hop_mat[4], has_arrow=False, thickness=hop_thickness),
     ]
     
-    # rules = [
-    #     ((1,0,0), Vector((0,0,1)), 0.0, s_x),
-    #     ((1,1,0), Vector((0,0,1)), 0.0, s_y),
-    # ]
     hopping_rules = [
-        # Rules: (Direction vector, Bending axis, Height scale, Material, Has arrow)
+        # Rules: (Direction vector, Bending axis, Height scale, style)
         ( (1, 0, 0), Vector((0, 0, 1)), 0.0, hop_style[0] ),
         ( (0, 1, 0), Vector((0, 0, 1)), 0.0, hop_style[1] ),
         ( (0, 0, 1), Vector((0, 0, 1)), 0.0, hop_style[2] ),
@@ -40,11 +31,7 @@ def get_rules_and_legend(materials):
         ( (1, -1, 1), Vector((0, 0, 1)), 0.0, hop_style[4] ),
     ]
     
-    legend_latex_shift = Vector((0.1, 0.1, 0))
-    # legend = [
-    #     (r"\kappa_x", s_x, shift),
-    #     (r"\kappa_y", s_y, shift),
-    # ]
+    legend_latex_shift = Vector((-0.2, 0.1, 0))
     legend = [
         (r"\kappa_x", hop_style[0], legend_latex_shift),
         (r"\kappa_y", hop_style[1], legend_latex_shift),
@@ -54,16 +41,30 @@ def get_rules_and_legend(materials):
     ]
     return hopping_rules, legend
 
-# legend_settings = {
-#     'start_pos': Vector((0.5, -2, 0)),
-#     'cols': 2, 'row_spacing': 2.0, 'col_spacing': 5.0, 'line_length': 3.0
-# }
 legend_settings = {
     'start_pos': Vector((0.5, -2, 0)),
-    'cols': 3, # Number of columns
-    'row_spacing': 2.0,
-    'col_spacing': 5.0,
-    'line_length': 3.0,
+    'cols': 2, # Number of columns
+    'row_spacing': 2.0, # Vertical spacing between rows
+    'col_spacing': 5.2, # Horizontal spacing between columns
+    'text_orient': (0, -1, 0), # Direction the text faces
+    'line_length': 3.0, # Length of the line in each legend entry
 }
-output_res = (900, 900)
+
+camera_settings = {
+    'scale': 1.6, # Control the orthogonal scale of the camera
+    'cam_loc': Vector((10.17,-21.3,18.87)), # Custom camera location
+    'shift': Vector((0,-0.5,-0.5)), # Optional shift of the target point
+}
+
+axis_settings = {
+    'show': True,           # Turn on/off
+    'location': (-3, -3, 0),# Position (Left-Bottom corner usually looks best)
+    'length': 2.5,          # Length of the axis
+    'thickness': 0.08,       # Thickness of the shaft
+    'text_orient': (0, -1, 0), # Direction the text faces
+    'show_axes': ['x', 'y', 'z'],          # <--- 关键修改，不写 'z'
+}
+
+scale = 2
+output_res = (900*scale, 900*scale)
 output_name = "3D_Reciprocal"

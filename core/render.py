@@ -45,22 +45,57 @@ def setup_lighting(target_center):
     fill.rotation_euler = (Vector(target_center) - fill.location).to_track_quat('-Z', 'Y').to_euler()
 
 def setup_camera(config, center_x, total_width):
+    """ Setup camera with automatic centering for 1D, 2D, and 3D lattices. """
     cam_data = bpy.data.cameras.new("MainCamera")
     cam_obj = bpy.data.objects.new("MainCamera", cam_data)
     bpy.context.scene.collection.objects.link(cam_obj)
     bpy.context.scene.camera = cam_obj
     cam_obj.data.type = 'ORTHO'
     
+    # --- 1. Read User Configuration (Safe Access) ---
+    # Use getattr/get to ensure backward compatibility with old config files.
+    # If 'camera_settings' is missing, these defaults will be used.
+    settings = getattr(config, 'camera_settings', {})
+    
+    # --- 2. Calculate Scene Boundaries ---
+    
+    # Y-axis boundaries (Lattice + Legend)
     lattice_max_y = (config.Ny - 1) * config.dy
-    legend_pos_y = config.legend_settings['start_pos'][1]
+    
+    # Get legend position (Default to 0 if not set)
+    # Ensure we access 'legend_settings' safely as well
+    leg_settings = getattr(config, 'legend_settings', {})
+    legend_pos_y = leg_settings.get('start_pos', Vector((0,0,0)))[1]
     
     scene_center_y = (lattice_max_y + legend_pos_y) / 2.0
-    target_vec = Vector((center_x, scene_center_y, 0))
     
-    scene_h = lattice_max_y - legend_pos_y
-    cam_obj.data.ortho_scale = max(total_width, scene_h) * 1.05
+    # [FIX] Z-axis boundaries (Critical for 3D lattices)
+    # If Nz/dz are missing (e.g., in 1D/2D configs), default to 1 and 0.
+    nz = getattr(config, 'Nz', 1)
+    dz = getattr(config, 'dz', 0)
+    lattice_max_z = (nz - 1) * dz
+    scene_center_z = lattice_max_z / 2.0
     
-    cam_obj.location = target_vec + Vector((0, -20, 30))
+    # Now targets the true geometric center (X, Y, Z)
+    target_vec = Vector((center_x, scene_center_y, scene_center_z)) + settings.get('shift', Vector((0,0,0)))
+    
+    # --- 4. Calculate Orthographic Scale ---
+    # Height of the scene in Y
+    scene_h = abs(lattice_max_y - legend_pos_y)
+    
+    # Base scale covers the largest dimension among Width, Y-Height, and Z-Height
+    # * 1.05 adds a 5% margin
+    base_ortho_scale = max(total_width, scene_h, lattice_max_z) 
+    
+    # scale > 1 means Zoom Out (smaller object)
+    cam_obj.data.ortho_scale = base_ortho_scale * settings.get('scale', 1.0)
+    
+    # --- 5. Place Camera ---
+    # Position camera with an isometric-like offset relative to the target
+    # Default offset if 'cam_loc' not specified
+    cam_obj.location = settings.get('cam_loc', target_vec + Vector((0, -20, 30)))
+    
+    # Rotate camera to look directly at the target vector
     cam_obj.rotation_euler = (target_vec - cam_obj.location).to_track_quat('-Z', 'Y').to_euler()
 
 def output_image(filename_suffix, width, height, folder="output"):
@@ -72,8 +107,11 @@ def output_image(filename_suffix, width, height, folder="output"):
     out_dir = os.path.join(dir_path, folder)
     if not os.path.exists(out_dir): os.makedirs(out_dir)
     
-    base_name = os.path.splitext(os.path.basename(blend_path))[0]
-    final_filename = f"{base_name}_{filename_suffix}.png"
+    # base_name = os.path.splitext(os.path.basename(blend_path))[0]
+    # final_filename = f"{base_name}_{filename_suffix}.png"
+    # print(f"base_name: {base_name}")
+    # print(f"--- Rendering to {final_filename} ---")
+    final_filename = f"{filename_suffix}.png"
     
     scene.render.resolution_x = width
     scene.render.resolution_y = height

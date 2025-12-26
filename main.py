@@ -40,7 +40,10 @@ def run():
     
     # The configuration name to load (corresponds to the filename in 'configs/')
     # DO NOT add .py extension here.
-    TARGET_CONFIG = "config_3D_Reciprocal" 
+    TARGET_CONFIG = "config_1D_Range2" 
+    # TARGET_CONFIG = "config_1D_Range3" 
+    # TARGET_CONFIG = "config_2D_Reciprocal" 
+    # TARGET_CONFIG = "config_3D_Reciprocal" 
     
     try:
         # Attempt to dynamically import the module
@@ -86,6 +89,20 @@ def run():
     # Generate geometry
     positions = geo.generate_sites(cfg, materials_dict['site'])
     geo.generate_hoppings(cfg, positions)
+    
+    # ==========================================
+    # 5. Create Axis Gizmo (New Feature)
+    # ==========================================
+    # Safe access: If 'axis_settings' is missing, do nothing.
+    axis_cfg = getattr(cfg, 'axis_settings', {})
+    if axis_cfg.get('show', False):
+        print("--- Generating Axis Gizmo ---")
+        loc = axis_cfg.get('location', (-2, -2, 0)) # Default position
+        ln  = axis_cfg.get('length', 2.0)
+        th  = axis_cfg.get('thickness', 0.06)
+        
+        geo.create_axis_gizmo(axis_cfg, loc, length=ln, thickness=th)
+    # ==========================================
     
     # Ground
     total_width = (cfg.Nx - 1) * cfg.dx

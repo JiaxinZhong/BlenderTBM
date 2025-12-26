@@ -1,14 +1,19 @@
 from mathutils import Vector
 from core.materials import HoppingStyle
+import core.colors as colors
 
 # --- 配色 ---
 color_site = (0.3, 0.3, 0.3, 1)
-# NPG Colors
-c_red = (230/255, 75/255, 53/255, 1)
-c_blue = (77/255, 187/255, 213/255, 1)
-c_green = (0/255, 160/255, 135/255, 1)
-c_darkblue = (60/255, 84/255, 136/255, 1)
-hop_colors = [c_red, c_blue, c_green, c_darkblue]
+
+# Defined colors by hand
+# c_red = (230/255, 75/255, 53/255, 1)
+# c_blue = (77/255, 187/255, 213/255, 1)
+# c_green = (0/255, 160/255, 135/255, 1)
+# c_darkblue = (60/255, 84/255, 136/255, 1)
+# hop_colors = [c_red, c_blue, c_green, c_darkblue]
+
+# Define colors using color.py
+hop_colors = [colors.NPG[0], colors.NPG[1], colors.NPG[2], colors.NPG[3]]
 
 # --- 晶格参数 ---
 Nx, Ny, Nz = 5, 1, 1
@@ -50,4 +55,8 @@ legend_settings = {
     'cols': 2, 'row_spacing': 2.0, 'col_spacing': 8.5, 'line_length': 3.0
 }
 output_res = (2000, 900)
-output_name = "1D_Chain"
+output_name = "1D_Range3"
+
+camera_settings = {
+    'scale': 1.2, # Control the orthogonal scale of the camera
+}

@@ -1,3 +1,6 @@
+# White list assets directory
+!assets/
+
 # Temporary files
 *.tmp.py
 

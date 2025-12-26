@@ -1,6 +1,8 @@
 import bpy
 from mathutils import Vector
 from .utils import get_collection
+from .materials import create_material
+import core.colors as colors
 
 def create_arrow(location, direction, size, material, collection):
     bpy.ops.mesh.primitive_cone_add(radius1=size*0.3, radius2=0, depth=size, location=location, vertices=64)
@@ -108,3 +110,105 @@ def generate_hoppings(config, positions):
                         
                         create_hopping(p_curr, p_target, h, hop_style, col_lattice, 
                                      bend_axis=bend_axis, arrow_size=config.arrow_size)
+                        
+                        
+                        
+def create_text_label(text, location, size, color):
+    """ Helper: Create a simple 3D text object (Non-LaTeX) """
+    bpy.ops.object.text_add(location=location)
+    obj = bpy.context.active_object
+    obj.data.body = text
+    obj.data.size = size
+    obj.data.extrude = 0.02 # Slight thickness
+    
+    # Orient text to stand up (Optional: Adjust based on camera)
+    obj.rotation_euler = (1.57, 0, 0) # Rotate 90 deg on X
+    
+    # Create simple material for text
+    mat = create_material(f"Mat_Text_{text}", color, roughness=0.1)
+    obj.data.materials.append(mat)
+    return obj
+
+def create_axis_gizmo(settings, location, length=2.0, thickness=0.08):
+    """
+    Creates a coordinate system (Gizmo) with selective axis display.
+    """
+    # Avoid circular import issues
+    from .legend import generate_latex_mesh
+    
+    col_gizmo = get_collection("Gizmo")
+    
+    # --- [NEW] Get allowed axes from settings ---
+    # Default to showing all three if not specified
+    # Example input: ['x', 'y'] -> Only shows X and Y
+    target_axes = settings.get('show_axes', ['x', 'y', 'z'])
+    # Normalize to lowercase to be safe (handle 'X' vs 'x')
+    target_axes = [ax.lower() for ax in target_axes]
+    
+    # Configuration: Direction, Color, Label
+    axes_def = [
+        (Vector((1,0,0)), colors.AxisRed,   "x"),
+        (Vector((0,1,0)), colors.AxisGreen, "y"),
+        (Vector((0,0,1)), colors.AxisBlue,  "z")
+    ]
+    
+    # Pre-create materials
+    mat_r = create_material("AxisR", colors.AxisRed,   roughness=0.2)
+    mat_g = create_material("AxisG", colors.AxisGreen, roughness=0.2)
+    mat_b = create_material("AxisB", colors.AxisBlue,  roughness=0.2)
+    mats = [mat_r, mat_g, mat_b]
+    
+    # Create text material
+    mat_text = create_material("AxisText", colors.Black, roughness=0.5)
+    
+    for i, (direction, color, label) in enumerate(axes_def):
+        # --- [NEW] Filter Logic ---
+        # Skip drawing this axis if it's not in the target list
+        if label not in target_axes:
+            continue
+        # --------------------------
+
+        # 1. Draw Shaft (Cylinder)
+        start = Vector(location)
+        end   = start + direction * length
+        mid   = (start + end) / 2
+        
+        bpy.ops.mesh.primitive_cylinder_add(radius=thickness, depth=length, location=mid)
+        shaft = bpy.context.active_object
+        shaft.data.materials.append(mats[i])
+        shaft.rotation_euler = direction.to_track_quat('Z', 'Y').to_euler()
+        
+        for c in shaft.users_collection: c.objects.unlink(shaft)
+        col_gizmo.objects.link(shaft)
+        bpy.ops.object.shade_smooth()
+        
+        # 2. Draw Arrow Head (Cone)
+        head_len = thickness * 5
+        head_rad = thickness * 2.5
+        # Tip location is exactly at 'end'
+        bpy.ops.mesh.primitive_cone_add(radius1=head_rad, radius2=0, depth=head_len, location=end)
+        head = bpy.context.active_object
+        head.data.materials.append(mats[i])
+        head.rotation_euler = direction.to_track_quat('Z', 'Y').to_euler()
+        
+        for c in head.users_collection: c.objects.unlink(head)
+        col_gizmo.objects.link(head)
+        bpy.ops.object.shade_smooth()
+        
+        # 3. Add LaTeX Label
+        text_pos = end + (direction * 0.5)
+        text_pos.z += 0.2 
+        if label == 'x':
+            text_pos.x -= 0.5
+            text_pos.z += 0.5
+        
+        generate_latex_mesh(
+            latex_code=label,       # "x", "y", "z"
+            location=text_pos,
+            scale=1.2,
+            material=mat_text,
+            collection=col_gizmo,
+            thickness=0.05,
+            offset=(0,0,0),
+            orientation=settings.get('text_orient', (0,0,1))
+        )

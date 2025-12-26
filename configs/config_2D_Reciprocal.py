@@ -33,7 +33,24 @@ def get_rules_and_legend(materials):
 
 legend_settings = {
     'start_pos': Vector((0.5, -2, 0)),
-    'cols': 2, 'row_spacing': 2.0, 'col_spacing': 5.0, 'line_length': 3.0
+    'cols': 2, 'row_spacing': 2.0, 'col_spacing': 5.0, 'line_length': 3.0,
+    'text_orient': (0, 0, 1), # Direction the text faces
 }
-output_res = (900, 900)
-output_name = "2D_Reci"
+
+camera_settings = {
+    'scale': 1.25, # Control the orthogonal scale of the camera
+    'shift': Vector((-1, 0, 0)), # Optional shift of the target point
+}
+
+axis_settings = {
+    'show': True,           # Turn on/off
+    'location': (-3, -3, 0),# Position (Left-Bottom corner usually looks best)
+    'length': 2.5,          # Length of the axis
+    'thickness': 0.08,       # Thickness of the shaft
+    'text_orient': (0, 0, 1), # Direction the text faces
+    'show_axes': ['x', 'y'],          # <--- 关键修改，不写 'z'
+}
+
+scale = 2
+output_res = (900*scale, 900*scale)
+output_name = "2D_Reciprocal"

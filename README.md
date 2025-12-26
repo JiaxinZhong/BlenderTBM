@@ -13,12 +13,12 @@ Instead of manually dragging objects in 3D software or settling for flat 2D plot
 
 ## Examples 
 
-| Render Result | Configuration Source |
+| Render Result | Configuration Source (under `configs/`) |
 | :---: | :--- |
-| <img src="assets/1D_Range2_compressed.png" width="100%"> | **1D Long-range nonreciprocal model**<br>📄[`configs/config_1D_Range2.py`](configs/config_1D_Range2.py) |
-| <img src="assets/1D_Range3_compressed.png" width="100%"> | **1D Long-range nonreciprocal model**<br>📄[`configs/config_1D_Range3.py`](configs/config_1D_Range3.py) |
-| <img src="assets/2D_Reciprocal_compressed.png" width="100%"> | **2D Reciprocal Lattice**<br>📄[`configs/config_2D_Reciprocal.py`](configs/config_2D_Reciprocal.py) |
-| <img src="assets/3D_Reciprocal_compressed.png" width="100%"> | **3D Reciprocal Lattice**<br>📄[`configs/config_3D_Reciprocal.py`](configs/config_3D_Reciprocal.py) |
+| <img src="assets/1D_Range2_compressed.png" width="100%"> | **1D Long-range nonreciprocal model**<br>📄[`config_1D_Range2.py`](configs/config_1D_Range2.py) |
+| <img src="assets/1D_Range3_compressed.png" width="100%"> | **1D Long-range nonreciprocal model**<br>📄[`config_1D_Range3.py`](configs/config_1D_Range3.py) |
+| <img src="assets/2D_Reciprocal_compressed.png" width="100%"> | **2D Reciprocal Lattice**<br>📄[`config_2D_Reciprocal.py`](configs/config_2D_Reciprocal.py) |
+| <img src="assets/3D_Reciprocal_compressed.png" width="100%"> | **3D Reciprocal Lattice**<br>📄[`config_3D_Reciprocal.py`](configs/config_3D_Reciprocal.py) |
 
 
 ## Getting Started
